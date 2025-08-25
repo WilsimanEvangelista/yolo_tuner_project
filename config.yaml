@@ -1,0 +1,51 @@
+# -----------------------------------------------------------------------------
+# MAIN CONFIGURATION FILE FOR THE YOLO HPO PIPELINE
+# -----------------------------------------------------------------------------
+
+# --- 1. File and Directory Paths ---
+paths:
+  data_root: "data"                   # Root directory for all datasets
+  full_dataset: "full_dataset"        # Folder with the original, complete dataset
+  base_models: "base_models"          # Folder for pre-trained .pt models
+  
+  # Names for generated directories and files
+  dev_dataset: "dev_dataset"
+  final_test_dataset: "final_test_dataset"
+  
+  dev_dataset_yaml: "dev_dataset.yaml"
+  dev_full_yaml: "dev_full.yaml"
+  final_test_yaml: "final_test.yaml"
+  
+  # Outputs
+  ray_results: "ray_results"
+  production_model: "production_model"
+  best_config_json: "best_config.json"
+
+# --- 2. Dataset Splitting Parameters ---
+dataset:
+  test_split_ratio: 0.1               # 10% of the data for the final blind test set
+  random_seed: 42                     # For reproducible data splits and training
+
+# --- 3. Hyperparameter Optimization (HPO) Parameters ---
+hpo:
+  num_samples: 20                     # Total number of hyperparameter combinations to test
+  resources_per_trial:
+    cpu: 2
+    gpu: 1
+  
+  metric: "median_ap"
+  mode: "max"
+
+  experiment_name: "yolo_hpo_gold_standard"
+  
+  # Cross-Validation settings
+  k_folds: 5
+  n_repeats: 1                        # Set to >1 for RepeatedKFold, but increases runtime
+
+# --- 4. Fixed Training Parameters ---
+# These are used as fixed values during the HPO search space definition
+training:
+  epochs: 50
+  patience: 10
+  batch_size: 16
+  imgsz: 640
