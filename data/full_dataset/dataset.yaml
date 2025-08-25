@@ -1,0 +1,6 @@
+train: ./images/
+val: ./images/
+test: ./images/
+
+nc: 3
+names: ['Californicus', 'Macropilis', 'Rajado']
